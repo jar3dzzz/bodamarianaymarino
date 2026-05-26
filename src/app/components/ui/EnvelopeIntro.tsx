@@ -90,7 +90,7 @@ export default function EnvelopeIntro() {
 
         {/* 5. Golden Seal (Wax Seal with sello.png) */}
         <div 
-          className="absolute left-3/5 top-2/4 -translate-x-4/10 -translate-y-2/5 flex flex-col items-center justify-center"
+          className="absolute left-5/8 top-4/7 -translate-x-4/10 -translate-y-2/5 flex flex-col items-center justify-center"
           style={{
             zIndex: 35,
             opacity: isFlapOpened ? 0 : 1,
@@ -105,6 +105,16 @@ export default function EnvelopeIntro() {
               className="w-full h-full object-contain"
             />
           </div>
+          <span 
+            className="mt-2 text-[10px] tracking-[0.3em] uppercase animate-pulse select-none"
+            style={{ 
+              color: "var(--primary)", 
+              fontFamily: "var(--font-body)",
+              fontWeight: 500
+            }}
+          >
+            Toca para abrir
+          </span>
         </div>
 
       </div>

@@ -598,7 +598,7 @@ const handleCopyClabe = () => {
       {/* Mesa de regalos*/}
       <section className="py-16 px-6">
         <SectionHeader eyebrow="Detalles" title="Mesa de regalos" />
-        <div className="w-full h-[400px] bg-background rounded-md border border-border">
+        <div className="w-full h-[400px] bg-background rounded-md border border-border shadow-lg">
           <div className="flex items-center justify-center my-4 max-w-xs mx-auto opacity-70">
             <div className="h-px bg-border flex-grow rounded-full" style={{ backgroundColor: "var(--border)" }} />
             <img src="/regalo.png" alt="Logo" className="w-auto h-14" />

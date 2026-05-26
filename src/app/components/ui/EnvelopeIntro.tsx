@@ -38,7 +38,7 @@ export default function EnvelopeIntro() {
 
   return (
     <div 
-      className={`absolute top-0 left-0 right-0 h-[100svh] z-50 flex items-center justify-center transition-opacity duration-1000 ease-in-out ${
+      className={`fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-md md:max-w-lg z-50 flex items-center justify-center transition-opacity duration-1000 ease-in-out ${
         isCardSlidOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
       style={{ backgroundColor: "#FAF7F2" }}
@@ -61,7 +61,7 @@ export default function EnvelopeIntro() {
           <svg 
             viewBox="0 0 100 50" 
             preserveAspectRatio="none" 
-            className="w-full h-[50svh] drop-shadow-[0_4px_8px_rgba(0,0,0,0.06)]"
+            className="w-full h-1/2 drop-shadow-[0_4px_8px_rgba(0,0,0,0.06)]"
           >
             <polygon points="0,0 100,0 50,50" fill="#E8E1D5" stroke="#DDD4C5" strokeWidth="0.5" />
           </svg>
@@ -83,7 +83,7 @@ export default function EnvelopeIntro() {
           className="absolute inset-x-0 bottom-0 pointer-events-none"
           style={{ zIndex: 22 }}
         >
-          <svg viewBox="0 0 100 50" preserveAspectRatio="none" className="w-full h-[50svh]">
+          <svg viewBox="0 0 100 50" preserveAspectRatio="none" className="w-full h-1/2">
             <polygon points="0,50 100,50 50,0" fill="#D7CEC0" stroke="#DDD4C5" strokeWidth="0.2" />
           </svg>
         </div>

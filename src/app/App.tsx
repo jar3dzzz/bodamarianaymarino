@@ -490,10 +490,10 @@ const handleCopyClabe = () => {
                 Padres de Mariana
               </p>
               <p className="text-sm font-medium text-foreground leading-relaxed">
-                Dioseline Gómez Gómez
+                - Dioseline Gómez Gómez
               </p>
               <p className="text-sm font-medium text-foreground leading-relaxed">
-                Horacio Domínguez Guichard
+                - Horacio Domínguez Guichard
               </p>
             </motion.div>
             <motion.div 
@@ -510,10 +510,10 @@ const handleCopyClabe = () => {
                 Padres de Mariano
               </p>
               <p className="text-sm font-medium text-foreground leading-relaxed">
-                Libertad González Balboa
+                - Libertad González Balboa
               </p>
               <p className="text-sm font-medium text-foreground leading-relaxed">
-                Raúl Bermúdez Requena
+                - Raúl Bermúdez Requena
               </p>
             </motion.div>
           </div>

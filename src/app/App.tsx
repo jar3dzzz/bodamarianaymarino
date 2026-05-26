@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { MapPin, Heart, Martini, Utensils, Music, Car, Shirt } from "lucide-react";
+import { MapPin, Heart, Martini, Utensils, Music, Car, Shirt, Check, Copy } from "lucide-react";
 import EnvelopeIntro from "./components/ui/EnvelopeIntro";
 import { motion } from "motion/react";
 
@@ -55,11 +55,11 @@ function useCountdown(target: Date) {
 }
 
 const GALLERY = [
-  { url: "https://images.unsplash.com/photo-1607357910286-1ff94ac13c24?w=800&h=600&fit=crop&auto=format", alt: "Novios entre plantas", wide: true },
-  { url: "https://images.unsplash.com/photo-1596457221755-b96bc3a6df18?w=400&h=500&fit=crop&auto=format", alt: "Beso elegante", wide: false },
-  { url: "https://images.unsplash.com/photo-1562859135-3c009b776595?w=400&h=500&fit=crop&auto=format", alt: "Frente a frente", wide: false },
-  { url: "https://images.unsplash.com/photo-1655901856612-a7f76949fb80?w=400&h=500&fit=crop&auto=format", alt: "Momento íntimo", wide: false },
-  { url: "https://images.unsplash.com/photo-1621621668101-d5c8329b3784?w=400&h=500&fit=crop&auto=format", alt: "Traje blanco", wide: false },
+  { url: "/gallery3.mp4", alt: "Casona333", wide: true },
+  { url: "/gallery2.jpg", alt: "Beso elegante", wide: false },
+  { url: "/gallery1.jpg", alt: "Frente a frente", wide: false },
+  { url: "/gallery4.jpg", alt: "Momento íntimo", wide: false },
+  { url: "/gallery5.jpg", alt: "Traje blanco", wide: false },
 ];
 
 function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
@@ -90,6 +90,7 @@ function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
 
 export default function App() {
   const { days, hours, minutes, seconds } = useCountdown(WEDDING_DATE);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
@@ -97,6 +98,38 @@ export default function App() {
     }
     window.scrollTo(0, 0);
   }, []);
+
+const handleCopyClabe = () => {
+    const clabe = "014690920016940652";
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(clabe).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }).catch(err => {
+        fallbackCopyText(clabe);
+      });
+    } else {
+      fallbackCopyText(clabe);
+    }
+  };
+  const fallbackCopyText = (text: string) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand('copy');
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Fallback copy failed", err);
+    }
+    document.body.removeChild(textArea);
+  };
 
   return (
     <div
@@ -118,7 +151,6 @@ export default function App() {
             style={{
               background:
                 "rgba(0, 00, 0, 0.6)",
-              // "linear-gradient(to bottom, rgba(28,45,36,0.1) 0%, rgba(28,45,36,0.4) 50%, rgba(28,45,36,0.85) 100%)",
             }}
           />
         </div>
@@ -291,7 +323,7 @@ export default function App() {
             transition={{ duration: 0.6 }}
           >
             <img
-              src="https://images.unsplash.com/photo-1596457221755-b96bc3a6df18?w=400&h=400&fit=crop&auto=format"
+              src="/gallery4.jpg"
               alt="Momento especial"
               className="w-full h-full object-cover"
             />
@@ -304,7 +336,7 @@ export default function App() {
             transition={{ duration: 0.6, delay: 0.15 }}
           >
             <img
-              src="https://images.unsplash.com/photo-1721401870202-8e2264ecced2?w=400&h=400&fit=crop&auto=format"
+              src="/gallery5.jpg"
               alt="Momento especial"
               className="w-full h-full object-cover"
             />
@@ -504,7 +536,7 @@ export default function App() {
         >
           <div className="relative h-52 bg-muted overflow-hidden">
             <img
-              src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800&h=400&fit=crop&auto=format"
+              src="/lo1.jpg"
               alt="Casona 333"
               className="w-full h-full object-cover"
               style={{ filter: "saturate(0.7) brightness(0.85)" }}
@@ -563,10 +595,55 @@ export default function App() {
 
       <Divider />
 
+      {/* Mesa de regalos*/}
+      <section className="py-16 px-6">
+        <SectionHeader eyebrow="Detalles" title="Mesa de regalos" />
+        <div className="w-full h-[400px] bg-background rounded-md border border-border">
+          <div className="flex items-center justify-center my-4 max-w-xs mx-auto opacity-70">
+            <div className="h-px bg-border flex-grow rounded-full" style={{ backgroundColor: "var(--border)" }} />
+            <img src="/regalo.png" alt="Logo" className="w-auto h-14" />
+            <div className="h-px bg-border flex-grow rounded-full" style={{ backgroundColor: "var(--border)" }} />
+          </div>
+          <div className="flex flex-col items-center justify-center max-w-xs mx-auto opacity-70">
+            <p className="text-center text-sm text-foreground">Su compañía es el mejor regalo que podríamos recibir. Sin embargo, si deseas contribuir a nuestra mesa de regalos, puedes hacerlo a través de estas opciones:</p>
+          </div>
+          <div className="flex flex-col items-center justify-center mt-8 max-w-xs mx-auto opacity-70">
+            <div className="flex flex-col items-center justify-center mt-8 max-w-xs mx-auto opacity-70">
+              <p className="text-center text-md text-foreground" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>CLABE interbancaria:</p>
+              <p className="text-center text-md text-foreground" style={{ fontFamily: "var(--font-body)", fontWeight: 600 }}>014690920016940652</p>
+            </div>
+          </div>
+          <div className="flex flex-col items-center justify-center mt-8 max-w-xs mx-auto opacity-70">
+            <button 
+            onClick={handleCopyClabe}
+            style={{
+              backgroundColor: "var(--primary)",
+              color: "var(--primary-foreground)",
+            }}
+            className="flex items-center gap-2 px-4 py-2 rounded-md hover:scale-[1.02] active:scale-[0.98] transition-transform cursor-pointer"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-4 h-4 text-white" />
+                  <span>¡Copiado!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4" />
+                  <span>Copiar CLABE</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <Divider />
+
       {/* ── Galería ── */}
       <section className="py-16">
         <div className="px-6">
-          <SectionHeader eyebrow="Momentos" title="Galería" />
+          <SectionHeader eyebrow="Esperamos verte pronto" title="Galería" />
         </div>
 
         <div className="px-4 grid grid-cols-2 gap-2">
@@ -580,11 +657,23 @@ export default function App() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: (i % 2) * 0.1 }}
             >
-              <img
-                src={url}
-                alt={alt}
-                className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-              />
+              {url.includes(".mp4") ? (
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                >
+                  <source src={url} type="video/mp4" />
+                </video>
+              ) : (
+                <img
+                  src={url}
+                  alt={alt}
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                />
+              )}
             </motion.div>
           ))}
         </div>

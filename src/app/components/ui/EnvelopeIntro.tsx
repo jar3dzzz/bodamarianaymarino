@@ -90,7 +90,7 @@ export default function EnvelopeIntro() {
 
         {/* 5. Golden Seal (Wax Seal with sello.png) */}
         <div 
-          className="absolute left-3/5 top-2/4 -translate-x-4/9 -translate-y-2/5 flex flex-col items-center justify-center"
+          className="absolute left-3/5 top-2/4 -translate-x-4/10 -translate-y-2/5 flex flex-col items-center justify-center"
           style={{
             zIndex: 35,
             opacity: isFlapOpened ? 0 : 1,

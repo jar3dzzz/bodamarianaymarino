@@ -50,7 +50,7 @@ export default function EnvelopeIntro() {
 
         {/* 2. Top Flap (Triangular Lid) */}
         <div 
-          className="absolute inset-x-0 top-0 overflow-visible"
+          className="absolute inset-x-0 top-0 h-[calc(50%+2px)] overflow-visible"
           style={{
             zIndex: isFlapOpened ? 5 : 30, // drops behind the card after opening
             transformOrigin: 'top',
@@ -61,7 +61,7 @@ export default function EnvelopeIntro() {
           <svg 
             viewBox="0 0 100 50" 
             preserveAspectRatio="none" 
-            className="w-full h-1/2 drop-shadow-[0_4px_8px_rgba(0,0,0,0.06)]"
+            className="w-full h-full drop-shadow-[0_4px_8px_rgba(0,0,0,0.06)]"
           >
             <polygon points="0,0 100,0 50,50" fill="#E8E1D5" stroke="#DDD4C5" strokeWidth="0.5" />
           </svg>
@@ -80,10 +80,10 @@ export default function EnvelopeIntro() {
 
         {/* 4. Bottom Flap */}
         <div 
-          className="absolute inset-x-0 bottom-0 pointer-events-none"
+          className="absolute inset-x-0 bottom-0 h-[calc(50%+2px)] pointer-events-none"
           style={{ zIndex: 22 }}
         >
-          <svg viewBox="0 0 100 50" preserveAspectRatio="none" className="w-full h-1/2">
+          <svg viewBox="0 0 100 50" preserveAspectRatio="none" className="w-full h-full">
             <polygon points="0,50 100,50 50,0" fill="#D7CEC0" stroke="#DDD4C5" strokeWidth="0.2" />
           </svg>
         </div>

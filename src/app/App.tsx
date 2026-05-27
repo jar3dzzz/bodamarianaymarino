@@ -200,7 +200,7 @@ const handleCopyClabe = () => {
             transition={{ duration: 0.6, delay: 1.0 }}
           />
         </div>
-        <div className='absolute bottom-20 right-[20%]'>
+        <div className='absolute bottom-20 justify-center'>
           <motion.p
             className="text-white/80 text-sm tracking-[0.25em] uppercase"
             initial={{ opacity: 0 }}

@@ -231,13 +231,9 @@ const handleCopyClabe = () => {
       </div>
 
       {/* ── Countdown ── */}
-      <section className="py-14 px-6">
-        <p
-          className="text-center text-xs tracking-[0.35em] uppercase mb-8"
-          style={{ color: "var(--muted-foreground)" }}
-        >
-          Faltan
-        </p>
+      <section className="py-8 px-6">
+        <SectionHeader eyebrow="Nuestro día"/>
+        <h1 className="text-center font-serif text-3xl my-5 mb-8">21 · Noviembre · 2026</h1>
         <motion.div 
           className="flex items-start justify-center gap-1 sm:gap-2 max-w-sm mx-auto"
           initial={{ opacity: 0, y: 15 }}
@@ -359,41 +355,79 @@ const handleCopyClabe = () => {
         <SectionHeader eyebrow="El gran día" title="Detalles" />
 
         {/* Itinerario */}
-        <div className="mb-10">
+        <div className="mb-14">
           <p
-            className="text-center text-xs tracking-[0.35em] uppercase mb-5"
+            className="text-center text-xs tracking-[0.35em] uppercase mb-10"
             style={{ color: "var(--muted-foreground)" }}
           >
             Itinerario
           </p>
-          <div className="space-y-3">
+          <div className="relative pl-4 sm:pl-6 max-w-md mx-auto">
             {[
-              { time: "6:00 PM", event: "Cóctel de Bienvenida", icon: Martini },
-              { time: "8:00 PM", event: "Cena", icon: Utensils },
-              { time: "9:00 PM", event: "Fiesta", icon: Music },
-            ].map(({ time, event, icon: Icon }, index) => (
-              <motion.div
+              {
+                time: "6:00 PM",
+                event: "Cóctel de Bienvenida",
+                description: "Recepción de invitados y brindis de bienvenida en el jardín.",
+                icon: Martini,
+              },
+              {
+                time: "8:00 PM",
+                event: "Cena",
+                description: "Banquete principal, brindis y momentos especiales.",
+                icon: Utensils,
+              },
+              {
+                time: "9:00 PM",
+                event: "Fiesta",
+                description: "Apertura de pista de baile y celebración con DJ.",
+                icon: Music,
+              },
+            ].map(({ time, event, description, icon: Icon }, index) => (
+              <div
                 key={time}
-                className="flex items-center gap-4 rounded-md p-4 border border-border bg-background transition-transform duration-300 hover:scale-[1.01]"
-                style={{ boxShadow: "0 2px 6px rgba(181, 145, 84, 0.04)" }}
-                initial={{ opacity: 0, x: -10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="relative pl-8 pb-8 last:pb-2 border-l border-border last:border-l-transparent"
               >
-                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-muted text-primary shrink-0">
-                  <Icon className="w-5 h-5" />
-                </div>
-                <div>
-                  <p
-                    className="text-[11px] tracking-widest uppercase mb-0.5"
-                    style={{ color: "var(--primary)", fontWeight: 600 }}
+                {/* Timeline Dot with Icon */}
+                <motion.div
+                  className="absolute left-0 -translate-x-1/2 top-0.5 flex items-center justify-center w-10 h-10 rounded-full border bg-background text-primary shadow-sm z-10"
+                  style={{ borderColor: "var(--primary)" }}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: index * 0.15 }}
+                >
+                  <Icon className="w-6 h-6" />
+                </motion.div>
+
+                {/* Timeline Card */}
+                <motion.div
+                  className="rounded-md p-4 border border-border bg-card transition-all duration-300 hover:scale-[1.01] hover:shadow-md"
+                  style={{ boxShadow: "0 2px 8px rgba(181, 145, 84, 0.05)" }}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.15 + 0.1 }}
+                >
+                  <span
+                    className="text-xs tracking-widest uppercase font-semibold block"
+                    style={{ color: "var(--primary)" }}
                   >
                     {time}
+                  </span>
+                  <h3
+                    className="text-base font-semibold mt-1 mb-1 text-foreground"
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
+                    {event}
+                  </h3>
+                  <p
+                    className="text-xs leading-relaxed"
+                    style={{ color: "var(--muted-foreground)" }}
+                  >
+                    {description}
                   </p>
-                  <p className="font-medium text-sm text-foreground">{event}</p>
-                </div>
-              </motion.div>
+                </motion.div>
+              </div>
             ))}
           </div>
         </div>

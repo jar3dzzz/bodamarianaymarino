@@ -6,15 +6,15 @@ export default function EnvelopeIntro() {
   const [isCardSlidOut, setIsCardSlidOut] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
-  // Lock main page scrolling while envelope is active
+  // Lock main page scrolling while envelope is active and closed
   useEffect(() => {
-    if (isVisible) {
+    if (isVisible && !isCardSlidOut) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
     return () => { document.body.style.overflow = 'unset'; };
-  }, [isVisible]);
+  }, [isVisible, isCardSlidOut]);
 
   const handleOpen = () => {
     if (isOpened) return;
@@ -27,7 +27,7 @@ export default function EnvelopeIntro() {
     setTimeout(() => {
       setIsCardSlidOut(true);
     }, 600);
-    
+
     // Step 3: Fade out and unmount the entire envelope
     setTimeout(() => {
       setIsVisible(false);
@@ -45,17 +45,17 @@ export default function EnvelopeIntro() {
     >
       <div 
         onClick={handleOpen}
-        className="relative w-full h-full bg-[#E8E1D5] overflow-hidden cursor-pointer select-none"
+        className="relative w-[90%] aspect-[4/3] bg-[#E8E1D5] overflow-visible cursor-pointer select-none shadow-2xl rounded-lg"
       >
 
         {/* 2. Top Flap (Triangular Lid) */}
         <div 
           className="absolute inset-x-0 top-0 h-[calc(50%+2px)] overflow-visible"
           style={{
-            zIndex: isFlapOpened ? 5 : 30, // drops behind the card after opening
+            zIndex: 35, // stays on top of other flaps (20, 22)
             transformOrigin: 'top',
             transform: isFlapOpened ? 'rotateX(180deg)' : 'rotateX(0deg)',
-            transition: 'transform 0.6s ease-in-out, z-index 0.1s 0.3s',
+            transition: 'transform 0.6s ease-in-out',
           }}
         >
           <svg 
@@ -90,9 +90,9 @@ export default function EnvelopeIntro() {
 
         {/* 5. Golden Seal (Wax Seal with sello.png) */}
         <div 
-          className="absolute left-5/8 top-4/7 -translate-x-4/11 -translate-y-2/5 flex flex-col items-center justify-center"
+          className="absolute left-67 top-55 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center"
           style={{
-            zIndex: 35,
+            zIndex: 40,
             opacity: isFlapOpened ? 0 : 1,
             transform: isFlapOpened ? 'translate(-50%, -50%) scale(0.8)' : 'translate(-50%, -50%) scale(1)',
             transition: 'opacity 0.4s ease-out, transform 0.4s ease-out',

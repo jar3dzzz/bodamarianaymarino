@@ -583,8 +583,11 @@ const handleCopyClabe = () => {
       {/* ── Ubicación ── */}
 
       <section
-        className="py-20 sm:py-28 px-4 sm:px-6 relative bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/bg-lo.jpg')" }}
+        className="py-20 sm:py-28 px-4 sm:px-6 relative bg-cover bg-no-repeat"
+        style={{ 
+          backgroundImage: "url('/bg-lo.jpg')",
+          backgroundPosition: "70% center" 
+        }}
       >
         {/* Overlay for readability */}
         <div className="absolute inset-0" style={{ backgroundColor: "rgba(255, 255, 255, 0.14)" }} />

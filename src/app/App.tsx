@@ -62,7 +62,7 @@ const GALLERY = [
   { url: "/gallery5.jpg", alt: "Traje blanco", wide: false },
 ];
 
-function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
+function SectionHeader({ eyebrow, title, eyebrowColor, titleColor }: { eyebrow: string; title?: string; eyebrowColor?: string; titleColor?: string }) {
   return (
     <motion.div
       className="text-center mb-10"
@@ -72,17 +72,24 @@ function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <p
-        className="text-xs tracking-[0.35em] uppercase mb-3"
-        style={{ fontFamily: "var(--font-body)", color: "var(--muted-foreground)" }}
+        className="text-xs tracking-[0.35em] uppercase mb-3 font-semibold"
+        style={{ 
+          fontFamily: "var(--font-body)", 
+          color: eyebrowColor || "var(--muted-foreground)" 
+        }}
       >
         {eyebrow}
       </p>
-      <h2
-        className="text-4xl text-foreground"
-        style={{ fontFamily: "var(--font-display)", fontWeight: 400 }}
-      >
-        {title}
-      </h2>
+      {title && (
+        <h2
+          className="text-4xl text-foreground"
+          style={{ fontFamily: "var(--font-display)", 
+            fontWeight: 400,
+            color: titleColor || "var(--foreground)" }}
+        >
+          {title}
+        </h2>
+      )}
       <div className="w-10 h-px mx-auto mt-4" style={{ backgroundColor: "var(--accent)" }} />
     </motion.div>
   );
@@ -214,26 +221,42 @@ const handleCopyClabe = () => {
 
       {/* ── Sello Decorativo ── */}
       <div className="w-full h-[4px] mx-auto" style={{ backgroundColor: "var(--accent)" }} />      
-      <div className="flex justify-center -mt-12 mb-4 relative z-20">
-        <motion.div 
-          className="w-24 h-24 rounded-full p-2 flex items-center justify-center"
-          initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
-          whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
-          <img
-            src="/sello.png"
-            alt="Sello"
-            className="w-full h-full object-contain"
-          />
-        </motion.div>
-      </div>
 
       {/* ── Countdown ── */}
-      <section className="py-8 px-6">
-        <SectionHeader eyebrow="Nuestro día"/>
-        <h1 className="text-center font-serif text-3xl my-5 mb-8">21 · Noviembre · 2026</h1>
+      <section
+        className="pt-16 pb-6 px-6 relative bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/bg-timer.jpg')" }}
+      >
+        <div 
+          className="absolute inset-0 backdrop-blur-[2px]" 
+          style={{ backgroundColor: "rgba(250, 247, 242, 0.75)" }} 
+        />
+        
+        {/* Sello Decorativo overlapping the top border */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+          <motion.div 
+            className="w-24 h-24 rounded-full p-2 flex items-center justify-center"
+            initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
+            whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <img
+              src="/sello.png"
+              alt="Sello"
+              className="w-full h-full object-contain"
+            />
+          </motion.div>
+        </div>
+
+        <div className="relative z-10">
+        <SectionHeader eyebrow="Nuestro día" eyebrowColor="var(--foreground)" />
+        <h1 
+          className="text-center text-3xl my-5 mb-8 text-foreground"
+          style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}
+        >
+          21 · Noviembre · 2026
+        </h1>
         <motion.div 
           className="flex items-start justify-center gap-1 sm:gap-2 max-w-sm mx-auto"
           initial={{ opacity: 0, y: 15 }}
@@ -251,7 +274,7 @@ const handleCopyClabe = () => {
               <div className="flex flex-col items-center gap-2">
                 <div
                   className="w-16 sm:w-20 h-16 sm:h-20 rounded-sm flex items-center justify-center border border-border bg-background"
-                  style={{ boxShadow: "0 1px 4px rgba(42,31,18,0.06)" }}
+                  style={{ boxShadow: "0 1px 4px rgba(42,31,18, 0.4)" }}
                 >
                   <span
                     className="text-3xl tabular-nums"
@@ -265,8 +288,8 @@ const handleCopyClabe = () => {
                   </span>
                 </div>
                 <span
-                  className="text-[10px] tracking-widest uppercase"
-                  style={{ color: "var(--muted-foreground)" }}
+                  className="text-[11px] tracking-widest uppercase font-semibold"
+                  style={{ color: "var(--foreground)", opacity: 0.85 }}
                 >
                   {label}
                 </span>
@@ -285,6 +308,7 @@ const handleCopyClabe = () => {
             </div>
           ))}
         </motion.div>
+        </div>
       </section>
 
       <Divider />
@@ -557,9 +581,16 @@ const handleCopyClabe = () => {
       <Divider />
 
       {/* ── Ubicación ── */}
-      <section className="py-16 px-6">
-        <SectionHeader eyebrow="¿Dónde?" title="Ubicación" />
 
+      <section
+        className="py-28 px-6 relative bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/bg-lo.jpg')" }}
+      >
+      <SectionHeader eyebrow="El lugar" eyebrowColor="var(--card)" title="Ubicación" titleColor="var(--card)"/>
+
+        {/* Overlay for readability */}
+        <div className="absolute inset-0" style={{ backgroundColor: "rgba(255, 255, 255, 0.14)" }} />
+        <div className="relative z-10">
         <motion.div
           className="rounded-sm overflow-hidden border border-border"
           style={{ backgroundColor: "var(--card)" }}
@@ -625,6 +656,7 @@ const handleCopyClabe = () => {
             </a>
           </div>
         </motion.div>
+        </div>
       </section>
 
       <Divider />

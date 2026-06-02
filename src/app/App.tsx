@@ -583,19 +583,19 @@ const handleCopyClabe = () => {
       {/* ── Ubicación ── */}
 
       <section
-        className="py-28 px-6 relative bg-cover bg-center bg-no-repeat"
+        className="py-20 sm:py-28 px-4 sm:px-6 relative bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/bg-lo.jpg')" }}
       >
-      <SectionHeader eyebrow="El lugar" eyebrowColor="var(--card)" title="Ubicación" titleColor="var(--card)"/>
-
         {/* Overlay for readability */}
         <div className="absolute inset-0" style={{ backgroundColor: "rgba(255, 255, 255, 0.14)" }} />
+        
         <div className="relative z-10">
-        <motion.div
-          className="rounded-sm overflow-hidden border border-border"
-          style={{ backgroundColor: "var(--card)" }}
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          <SectionHeader eyebrow="El lugar" eyebrowColor="var(--card)" title="Ubicación" titleColor="var(--card)"/>
+          <motion.div
+            className="rounded-sm overflow-hidden border border-border"
+            style={{ backgroundColor: "var(--card)" }}
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >

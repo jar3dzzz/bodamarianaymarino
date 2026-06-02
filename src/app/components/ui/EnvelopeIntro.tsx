@@ -102,7 +102,7 @@ export default function EnvelopeIntro() {
           transition: 'opacity 0.4s ease-out, transform 0.4s ease-out',
         }}
       >
-        <div className="w-24 h-24 rounded-full overflow-hidden active:scale-95 transition-transform duration-200 flex items-center justify-center">
+        <div className="w-24 h-24 rounded-full overflow-hidden active:scale-95 transition-transform duration-200 flex items-center justify-center relative">
           <img
             src="/sello.png"
             alt="Sello"
@@ -110,7 +110,7 @@ export default function EnvelopeIntro() {
           />
         </div>
         <span 
-          className="mt-2 text-[10px] tracking-[0.3em] uppercase animate-pulse select-none"
+          className="absolute top-full left-1/2 -translate-x-1/2 mt-2 whitespace-nowrap text-[10px] tracking-[0.3em] uppercase animate-pulse select-none"
           style={{ 
             color: "var(--primary)", 
             fontFamily: "var(--font-body)",

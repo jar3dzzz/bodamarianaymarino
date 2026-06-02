@@ -88,35 +88,37 @@ export default function EnvelopeIntro() {
           </svg>
         </div>
 
-        {/* 5. Golden Seal (Wax Seal with sello.png) */}
-        <div 
-          className="absolute left-57.5 top-55 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center"
-          style={{
-            zIndex: 40,
-            opacity: isFlapOpened ? 0 : 1,
-            transform: isFlapOpened ? 'translate(-50%, -50%) scale(0.8)' : 'translate(-50%, -50%) scale(1)',
-            transition: 'opacity 0.4s ease-out, transform 0.4s ease-out',
+      </div>
+
+      {/* 5. Golden Seal (Wax Seal with sello.png) — centered on page */}
+      <div 
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center"
+        onClick={handleOpen}
+        style={{
+          zIndex: 40,
+          cursor: 'pointer',
+          opacity: isFlapOpened ? 0 : 1,
+          transform: isFlapOpened ? 'translate(-50%, -50%) scale(0.8)' : 'translate(-50%, -50%) scale(1)',
+          transition: 'opacity 0.4s ease-out, transform 0.4s ease-out',
+        }}
+      >
+        <div className="w-24 h-24 rounded-full overflow-hidden active:scale-95 transition-transform duration-200 flex items-center justify-center">
+          <img
+            src="/sello.png"
+            alt="Sello"
+            className="w-full h-full object-contain"
+          />
+        </div>
+        <span 
+          className="mt-2 text-[10px] tracking-[0.3em] uppercase animate-pulse select-none"
+          style={{ 
+            color: "var(--primary)", 
+            fontFamily: "var(--font-body)",
+            fontWeight: 500
           }}
         >
-          <div className="w-24 h-24 rounded-full overflow-hidden active:scale-95 transition-transform duration-200 flex items-center justify-center">
-            <img
-              src="/sello.png"
-              alt="Sello"
-              className="w-full h-full object-contain"
-            />
-          </div>
-          <span 
-            className="mt-2 text-[10px] tracking-[0.3em] uppercase animate-pulse select-none"
-            style={{ 
-              color: "var(--primary)", 
-              fontFamily: "var(--font-body)",
-              fontWeight: 500
-            }}
-          >
-            Toca para abrir
-          </span>
-        </div>
-
+          Toca para abrir
+        </span>
       </div>
     </div>
   );

@@ -343,7 +343,7 @@ const handleCopyClabe = () => {
             transition={{ duration: 0.6 }}
           >
             <img
-              src="/gallery4.jpg"
+              src="/bg-lo.jpg"
               alt="Momento especial"
               className="w-full h-full object-cover"
             />
@@ -585,15 +585,14 @@ const handleCopyClabe = () => {
       <section
         className="py-20 sm:py-28 px-4 sm:px-6 relative bg-cover bg-no-repeat"
         style={{ 
-          backgroundImage: "url('/bg-lo.jpg')",
-          backgroundPosition: "40% center" 
+          backgroundImage: "url('/gallery4.jpg')",
         }}
       >
         {/* Overlay for readability */}
         <div className="absolute inset-0" style={{ backgroundColor: "rgba(255, 255, 255, 0.14)" }} />
         
         <div className="relative z-10">
-          <SectionHeader eyebrow="El lugar" eyebrowColor="var(--card)" title="Ubicación" titleColor="var(--card)"/>
+          <SectionHeader eyebrow="El lugar" title="Ubicación"/>
           <motion.div
             className="rounded-sm overflow-hidden border border-border"
             style={{ backgroundColor: "var(--card)" }}

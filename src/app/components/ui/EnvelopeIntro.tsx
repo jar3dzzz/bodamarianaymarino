@@ -92,7 +92,7 @@ export default function EnvelopeIntro() {
 
       {/* 5. Golden Seal (Wax Seal with sello.png) — centered on page */}
       <div 
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center"
+        className="absolute top-8/14 left-6/10 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center"
         onClick={handleOpen}
         style={{
           zIndex: 40,

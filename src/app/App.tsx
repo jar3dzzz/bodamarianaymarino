@@ -586,7 +586,7 @@ const handleCopyClabe = () => {
         className="py-20 sm:py-28 px-4 sm:px-6 relative bg-cover bg-no-repeat"
         style={{ 
           backgroundImage: "url('/bg-lo.jpg')",
-          backgroundPosition: "70% center" 
+          backgroundPosition: "40% center" 
         }}
       >
         {/* Overlay for readability */}

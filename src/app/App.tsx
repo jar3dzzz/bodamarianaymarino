@@ -224,12 +224,18 @@ const handleCopyClabe = () => {
 
       {/* ── Countdown ── */}
       <section
-        className="pt-16 pb-6 px-6 relative bg-cover bg-center bg-no-repeat"
+        className="pt-16 pb-8 px-6 relative bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/bg-timer.jpg')" }}
       >
         <div 
           className="absolute inset-0 backdrop-blur-[2px]" 
           style={{ backgroundColor: "rgba(250, 247, 242, 0.75)" }} 
+        />
+        <div 
+          className="absolute inset-x-0 bottom-0 h-20 pointer-events-none"
+          style={{
+            background: "linear-gradient(to bottom, transparent, var(--background))"
+          }}
         />
         
         {/* Sello Decorativo overlapping the top border */}
@@ -588,8 +594,26 @@ const handleCopyClabe = () => {
           backgroundImage: "url('/gallery4.jpg')",
         }}
       >
+        <div 
+          className="absolute inset-0 backdrop-blur-[2px]" 
+          style={{ backgroundColor: "rgba(250, 247, 242, 0.25)" }} 
+        />        
         {/* Overlay for readability */}
         <div className="absolute inset-0" style={{ backgroundColor: "rgba(255, 255, 255, 0.14)" }} />
+        
+        {/* Fades for smooth morphing into page background */}
+        <div 
+          className="absolute inset-x-0 top-0 h-24 pointer-events-none"
+          style={{
+            background: "linear-gradient(to bottom, var(--background), transparent)"
+          }}
+        />
+        <div 
+          className="absolute inset-x-0 bottom-0 h-24 pointer-events-none"
+          style={{
+            background: "linear-gradient(to bottom, transparent, var(--background))"
+          }}
+        />
         
         <div className="relative z-10">
           <SectionHeader eyebrow="El lugar" title="Ubicación"/>

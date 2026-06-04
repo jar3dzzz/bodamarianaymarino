@@ -140,10 +140,10 @@ const handleCopyClabe = () => {
 
   return (
     <div
-      className="min-h-screen bg-muted/40 flex justify-center items-start"
+      className="min-h-screen bg-background"
       style={{ fontFamily: "var(--font-body)" }}
     >
-      <div className="w-full max-w-md md:max-w-lg min-h-screen bg-background text-foreground shadow-2xl relative overflow-x-hidden">
+      <div className="w-full min-h-screen bg-background text-foreground relative overflow-x-hidden">
         <EnvelopeIntro />
         {/* ── Hero ── */}
       <section className="relative h-[100svh] flex flex-col items-center justify-center pb-20">
@@ -162,7 +162,7 @@ const handleCopyClabe = () => {
           />
         </div>
 
-        <div className="relative z-10 text-center px-6">
+        <div className="relative z-10 text-center px-6 max-w-2xl mx-auto">
           <motion.p
             className="text-xs tracking-[0.4em] uppercase mb-5"
             style={{ color: "var(--accent)", fontFamily: "var(--font-body)" }}
@@ -255,7 +255,7 @@ const handleCopyClabe = () => {
           </motion.div>
         </div>
 
-        <div className="relative z-10">
+        <div className="relative z-10 max-w-2xl mx-auto">
         <SectionHeader eyebrow="Nuestro día" eyebrowColor="var(--foreground)" />
         <h1 
           className="text-center text-3xl my-5 mb-8 text-foreground"
@@ -264,7 +264,7 @@ const handleCopyClabe = () => {
           21 · Noviembre · 2026
         </h1>
         <motion.div 
-          className="flex items-start justify-center gap-1 sm:gap-2 max-w-sm mx-auto"
+          className="flex items-start justify-center gap-2 sm:gap-4 max-w-md mx-auto"
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -320,7 +320,7 @@ const handleCopyClabe = () => {
       <Divider />
 
       {/* ── Nuestra Historia ── */}
-      <section className="py-16 px-6">
+      <section className="py-16 px-6 max-w-3xl mx-auto">
         <SectionHeader eyebrow="Nuestro camino" title="Nuestra Historia" />
 
         {/* <div className="rounded-2xl overflow-hidden bg-muted mb-8" style={{ aspectRatio: "4/5" }}>
@@ -381,18 +381,32 @@ const handleCopyClabe = () => {
       <Divider />
 
       {/* ── Detalles del Evento ── */}
-      <section className="py-16 px-6">
+      <section className="py-20 px-6 max-w-3xl mx-auto">
         <SectionHeader eyebrow="El gran día" title="Detalles" />
 
         {/* Itinerario */}
-        <div className="mb-14">
-          <p
-            className="text-center text-xs tracking-[0.35em] uppercase mb-10"
-            style={{ color: "var(--muted-foreground)" }}
+        <div className="mb-20">
+          <motion.p
+            className="text-center text-xs tracking-[0.35em] uppercase mb-12"
+            style={{ color: "var(--muted-foreground)", fontFamily: "var(--font-body)" }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
           >
             Itinerario
-          </p>
-          <div className="relative pl-4 sm:pl-6 max-w-md mx-auto">
+          </motion.p>
+
+          {/* Vertical timeline — alternating on desktop, left-aligned on mobile */}
+          <div className="relative max-w-md md:max-w-2xl mx-auto">
+            {/* Continuous timeline line: left on mobile, center on desktop */}
+            <div
+              className="absolute left-5 md:left-1/2 md:-translate-x-1/2 top-6 bottom-6 w-px"
+              style={{
+                background: "linear-gradient(to bottom, var(--accent), rgba(181, 145, 84, 0.15))",
+              }}
+            />
+
             {[
               {
                 time: "6:00 PM",
@@ -412,176 +426,298 @@ const handleCopyClabe = () => {
                 description: "Apertura de pista de baile y celebración con DJ.",
                 icon: Music,
               },
-            ].map(({ time, event, description, icon: Icon }, index) => (
-              <div
+            ].map(({ time, event, description, icon: Icon }, index, arr) => {
+              const isLeft = index % 2 === 0;
+              return (
+              <motion.div
                 key={time}
-                className="relative pl-8 pb-8 last:pb-2 border-l border-border last:border-l-transparent"
+                className={`relative flex items-start gap-5 group
+                  md:gap-0 md:items-center
+                  ${isLeft ? "md:flex-row-reverse" : "md:flex-row"}
+                `}
+                style={{ paddingBottom: index < arr.length - 1 ? "2.5rem" : "0" }}
+                initial={{ opacity: 0, x: isLeft ? 15 : -15 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.2 }}
               >
-                {/* Timeline Dot with Icon */}
-                <motion.div
-                  className="absolute left-0 -translate-x-1/2 top-0.5 flex items-center justify-center w-10 h-10 rounded-full border bg-background text-primary shadow-sm z-10"
-                  style={{ borderColor: "var(--primary)" }}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.15 }}
-                >
-                  <Icon className="w-6 h-6" />
-                </motion.div>
+                {/* Timeline node — icon circle (centered on desktop) */}
+                <div className="relative z-10 shrink-0 md:absolute md:left-1/2 md:-translate-x-1/2">
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center border-2 transition-transform duration-300 group-hover:scale-110"
+                    style={{
+                      borderColor: "var(--accent)",
+                      backgroundColor: "var(--background)",
+                      boxShadow: "0 3px 12px rgba(181, 145, 84, 0.18)",
+                    }}
+                  >
+                    <Icon className="w-5 h-5" style={{ color: "var(--primary)" }} />
+                  </div>
+                </div>
 
-                {/* Timeline Card */}
-                <motion.div
-                  className="rounded-md p-4 border border-border bg-card transition-all duration-300 hover:scale-[1.01] hover:shadow-md"
-                  style={{ boxShadow: "0 2px 8px rgba(181, 145, 84, 0.05)" }}
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.15 + 0.1 }}
+                {/* Event card */}
+                <div
+                  className={`flex-1 relative rounded-lg p-5 border border-border bg-card overflow-hidden transition-all duration-300 hover:shadow-lg
+                    md:w-[calc(50%-2rem)] md:flex-none
+                    ${isLeft ? "md:mr-[calc(50%+1.5rem)]" : "md:ml-[calc(50%+1.5rem)]"}
+                  `}
+                  style={{ boxShadow: "0 2px 12px rgba(181, 145, 84, 0.06)" }}
                 >
-                  <span
-                    className="text-xs tracking-widest uppercase font-semibold block"
-                    style={{ color: "var(--primary)" }}
-                  >
-                    {time}
-                  </span>
-                  <h3
-                    className="text-base font-semibold mt-1 mb-1 text-foreground"
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
-                    {event}
-                  </h3>
-                  <p
-                    className="text-xs leading-relaxed"
-                    style={{ color: "var(--muted-foreground)" }}
-                  >
-                    {description}
-                  </p>
-                </motion.div>
-              </div>
-            ))}
+                  {/* Gold accent — left on mobile, side-aware on desktop */}
+                  <div
+                    className={`absolute top-3 bottom-3 w-[3px] rounded-full
+                      left-0
+                      ${isLeft ? "md:left-auto md:right-0" : "md:left-0"}
+                    `}
+                    style={{
+                      background: "linear-gradient(to bottom, var(--accent), var(--primary))",
+                    }}
+                  />
+
+                  <div className={`pl-3 ${isLeft ? "md:pl-0 md:pr-3 md:text-right" : "md:pl-3"}`}>
+                    {/* Time */}
+                    <span
+                      className="inline-block text-[11px] tracking-[0.25em] uppercase font-bold mb-1 px-2.5 py-0.5 rounded-full"
+                      style={{
+                        color: "var(--primary)",
+                        backgroundColor: "rgba(181, 145, 84, 0.08)",
+                      }}
+                    >
+                      {time}
+                    </span>
+
+                    <h3
+                      className="text-base mt-1.5 mb-1 text-foreground"
+                      style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}
+                    >
+                      {event}
+                    </h3>
+
+                    <p
+                      className="text-xs leading-relaxed"
+                      style={{ color: "var(--muted-foreground)" }}
+                    >
+                      {description}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+              );
+            })}
           </div>
         </div>
 
         {/* Dress Code */}
-        <div className="mb-10">
-          <p
-            className="text-center text-xs tracking-[0.35em] uppercase mb-2"
-            style={{ color: "var(--muted-foreground)" }}
+        <div className="mb-20">
+          <motion.div
+            className="relative rounded-lg overflow-hidden border border-border bg-card max-w-2xl mx-auto"
+            style={{ boxShadow: "0 6px 30px rgba(181, 145, 84, 0.08)" }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
           >
-            Dress Code
-          </p>
-          <p
-            className="text-center text-2xl mb-5"
-            style={{ fontFamily: "var(--font-display)", color: "var(--primary)" }}
-          >
-            Formal
-          </p>
-          <div className="grid grid-cols-2 gap-4">
-            <motion.div 
-              className="rounded-md p-6 border border-border bg-background text-center transition-transform duration-300 hover:scale-[1.01]" 
-              style={{ boxShadow: "0 2px 6px rgba(181, 145, 84, 0.04)" }}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="flex items-center justify-center w-10 h-10 mx-auto mb-3 rounded-full bg-muted text-primary">
-                <Dress className="w-5 h-5" />
-              </div>
+            {/* Ornamental top border */}
+            <div
+              className="h-1.5"
+              style={{
+                background: "linear-gradient(90deg, var(--accent), var(--primary), var(--accent))",
+              }}
+            />
+
+            <div className="p-8 text-center">
               <p
-                className="text-lg mb-1"
-                style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}
+                className="text-[10px] tracking-[0.4em] uppercase mb-1"
+                style={{ color: "var(--muted-foreground)", fontFamily: "var(--font-body)" }}
               >
-                Ellas
+                Dress Code
               </p>
-              <p className="text-sm leading-relaxed mb-3" style={{ color: "var(--muted-foreground)" }}>
-                Vestido largo en tonos pasteles
-              </p>
-              <a
-                href="https://www.pinterest.com/search/pins/?q=vestido+largo+pastel+boda+formal"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs underline underline-offset-2 tracking-wide uppercase font-semibold transition-colors hover:text-accent"
-                style={{ color: "var(--primary)" }}
-              >
-                Ver inspiración →
-              </a>
-            </motion.div>
-            <motion.div 
-              className="rounded-xl p-6 border border-border bg-background text-center transition-transform duration-300 hover:scale-[1.01]" 
-              style={{ boxShadow: "0 2px 6px rgba(181, 145, 84, 0.04)" }}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.15 }}
-            >
-              <div className="flex items-center justify-center w-10 h-10 mx-auto mb-3 rounded-full bg-muted text-primary">
-                <Shirt className="w-5 h-5" />
-              </div>
               <p
-                className="text-lg mb-1"
-                style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}
+                className="text-3xl mb-6"
+                style={{ fontFamily: "var(--font-display)", color: "var(--primary)", fontWeight: 400 }}
               >
-                Ellos
+                Formal
               </p>
-              <p className="text-sm leading-relaxed mb-3" style={{ color: "var(--muted-foreground)" }}>
-                Traje y corbata
-              </p>
-            </motion.div>
-          </div>
+
+              {/* Side by side with center divider */}
+              <div className="flex items-stretch">
+                {/* Ellas */}
+                <div className="flex-1 flex flex-col items-center px-4">
+                  <div
+                    className="w-14 h-14 rounded-full flex items-center justify-center mb-4"
+                    style={{
+                      background: "linear-gradient(135deg, rgba(181, 145, 84, 0.08), rgba(197, 162, 101, 0.15))",
+                      border: "1px solid rgba(181, 145, 84, 0.2)",
+                    }}
+                  >
+                    <Dress className="w-6 h-6" style={{ color: "var(--primary)" }} />
+                  </div>
+                  <p
+                    className="text-lg mb-2"
+                    style={{ fontFamily: "var(--font-display)", fontWeight: 500, color: "var(--foreground)" }}
+                  >
+                    Ellas
+                  </p>
+                  <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--muted-foreground)" }}>
+                    Vestido largo en tonos pasteles
+                  </p>
+                  <a
+                    href="https://www.pinterest.com/search/pins/?q=vestido+largo+pastel+boda+formal"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] tracking-widest uppercase font-semibold transition-all duration-300 hover:gap-2"
+                    style={{ color: "var(--primary)" }}
+                  >
+                    Inspiración
+                    <span className="text-sm">→</span>
+                  </a>
+                </div>
+
+                {/* Center divider */}
+                <div className="flex flex-col items-center justify-center px-2">
+                  <div className="w-px flex-1" style={{ backgroundColor: "var(--border)" }} />
+                  <div
+                    className="w-2 h-2 rounded-full my-3 shrink-0"
+                    style={{ backgroundColor: "var(--accent)" }}
+                  />
+                  <div className="w-px flex-1" style={{ backgroundColor: "var(--border)" }} />
+                </div>
+
+                {/* Ellos */}
+                <div className="flex-1 flex flex-col items-center px-4">
+                  <div
+                    className="w-14 h-14 rounded-full flex items-center justify-center mb-4"
+                    style={{
+                      background: "linear-gradient(135deg, rgba(181, 145, 84, 0.08), rgba(197, 162, 101, 0.15))",
+                      border: "1px solid rgba(181, 145, 84, 0.2)",
+                    }}
+                  >
+                    <Shirt className="w-6 h-6" style={{ color: "var(--primary)" }} />
+                  </div>
+                  <p
+                    className="text-lg mb-2"
+                    style={{ fontFamily: "var(--font-display)", fontWeight: 500, color: "var(--foreground)" }}
+                  >
+                    Ellos
+                  </p>
+                  <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--muted-foreground)" }}>
+                    Traje y corbata
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
 
         {/* Padres */}
-        <div>
-          <p
-            className="text-center text-xs tracking-[0.35em] uppercase mb-5"
-            style={{ color: "var(--muted-foreground)" }}
-          >
-            Con el amor de sus padres
-          </p>
-          <div className="grid grid-cols-2 gap-4">
-            <motion.div 
-              className="rounded-sm p-4 border border-border bg-background"
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
+        <motion.div
+          className="relative rounded-lg overflow-hidden max-w-2xl mx-auto"
+          style={{
+            backgroundColor: "rgba(240, 234, 225, 0.5)",
+            border: "1px solid rgba(181, 145, 84, 0.12)",
+          }}
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+        >
+          <div className="p-8 md:p-10 text-center">
+            <Heart
+              className="w-5 h-5 mx-auto mb-4"
+              style={{ color: "var(--accent)", fill: "var(--accent)", opacity: 0.6 }}
+            />
+            <p
+              className="text-[10px] tracking-[0.4em] uppercase mb-10"
+              style={{ color: "var(--muted-foreground)", fontFamily: "var(--font-body)" }}
             >
-              <p
-                className="text-[10px] tracking-widest uppercase mb-2"
-                style={{ color: "var(--accent)" }}
-              >
-                Padres de Mariana
-              </p>
-              <p className="text-sm font-medium text-foreground leading-relaxed">
-                - Dioseline Gómez Gómez
-              </p>
-              <p className="text-sm font-medium text-foreground leading-relaxed">
-                - Horacio Domínguez Guichard
-              </p>
-            </motion.div>
-            <motion.div 
-              className="rounded-sm p-4 border border-border bg-background"
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.15 }}
-            >
-              <p
-                className="text-[10px] tracking-widest uppercase mb-2"
-                style={{ color: "var(--accent)" }}
-              >
-                Padres de Mariano
-              </p>
-              <p className="text-sm font-medium text-foreground leading-relaxed">
-                - Libertad González Balboa
-              </p>
-              <p className="text-sm font-medium text-foreground leading-relaxed">
-                - Raúl Bermúdez Requena
-              </p>
-            </motion.div>
+              Con el amor de sus padres
+            </p>
+
+            <div className="flex items-start">
+              {/* Padres de Mariana */}
+              <div className="flex-1 px-3">
+                <p
+                  className="text-[10px] tracking-[0.3em] uppercase mb-5 font-semibold"
+                  style={{ color: "var(--primary)" }}
+                >
+                  Padres de la novia
+                </p>
+                <div className="space-y-4">
+                  <div>
+                    <p
+                      className="text-base md:text-lg text-foreground"
+                      style={{ fontFamily: "var(--font-display)", fontWeight: 400 }}
+                    >
+                      Dioseline Gómez Gómez
+                    </p>
+                    <div
+                      className="w-8 h-px mx-auto mt-2"
+                      style={{ background: "linear-gradient(90deg, transparent, var(--accent), transparent)" }}
+                    />
+                  </div>
+                  <div>
+                    <p
+                      className="text-base md:text-lg text-foreground"
+                      style={{ fontFamily: "var(--font-display)", fontWeight: 400 }}
+                    >
+                      Horacio Domínguez Guichard
+                    </p>
+                    <div
+                      className="w-8 h-px mx-auto mt-2"
+                      style={{ background: "linear-gradient(90deg, transparent, var(--accent), transparent)" }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Center ornament */}
+              <div className="flex flex-col items-center justify-center px-2 pt-6">
+                <div className="w-px h-8" style={{ backgroundColor: "var(--border)" }} />
+                <Heart
+                  className="w-3 h-3 my-2 shrink-0"
+                  style={{ color: "var(--accent)", fill: "var(--accent)", opacity: 0.4 }}
+                />
+                <div className="w-px h-8" style={{ backgroundColor: "var(--border)" }} />
+              </div>
+
+              {/* Padres de Mariano */}
+              <div className="flex-1 px-3">
+                <p
+                  className="text-[10px] tracking-[0.3em] uppercase mb-5 font-semibold"
+                  style={{ color: "var(--primary)" }}
+                >
+                  Padres del novio
+                </p>
+                <div className="space-y-4">
+                  <div>
+                    <p
+                      className="text-base md:text-lg text-foreground"
+                      style={{ fontFamily: "var(--font-display)", fontWeight: 400 }}
+                    >
+                      Libertad González Balboa
+                    </p>
+                    <div
+                      className="w-8 h-px mx-auto mt-2"
+                      style={{ background: "linear-gradient(90deg, transparent, var(--accent), transparent)" }}
+                    />
+                  </div>
+                  <div>
+                    <p
+                      className="text-base md:text-lg text-foreground"
+                      style={{ fontFamily: "var(--font-display)", fontWeight: 400 }}
+                    >
+                      Raúl Bermúdez Requena
+                    </p>
+                    <div
+                      className="w-8 h-px mx-auto mt-2"
+                      style={{ background: "linear-gradient(90deg, transparent, var(--accent), transparent)" }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       <Divider />
@@ -615,7 +751,7 @@ const handleCopyClabe = () => {
           }}
         />
         
-        <div className="relative z-10">
+        <div className="relative z-10 max-w-2xl mx-auto">
           <SectionHeader eyebrow="El lugar" title="Ubicación"/>
           <motion.div
             className="rounded-sm overflow-hidden border border-border"
@@ -688,7 +824,7 @@ const handleCopyClabe = () => {
       <Divider />
 
       {/* Mesa de regalos*/}
-      <section className="py-16 px-6">
+      <section className="py-16 px-6 max-w-3xl mx-auto">
         <SectionHeader eyebrow="Detalles" title="Mesa de regalos" />
         <div className="w-full h-[400px] bg-background rounded-md border border-border shadow-lg">
           <div className="flex items-center justify-center my-4 max-w-xs mx-auto opacity-70">
@@ -733,12 +869,12 @@ const handleCopyClabe = () => {
       <Divider />
 
       {/* ── Galería ── */}
-      <section className="py-16">
+      <section className="py-16 max-w-4xl mx-auto">
         <div className="px-6">
           <SectionHeader eyebrow="Esperamos verte pronto" title="Galería" />
         </div>
 
-        <div className="px-4 grid grid-cols-2 gap-2">
+        <div className="px-4 grid grid-cols-2 md:grid-cols-3 gap-3">
           {GALLERY.map(({ url, alt, wide }, i) => (
             <motion.div
               key={i}

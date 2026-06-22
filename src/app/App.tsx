@@ -1,7 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Component, ReactNode } from "react";
 import { MapPin, Heart, Martini, Utensils, Music, Car, Shirt, Check, Copy } from "lucide-react";
 import EnvelopeIntro from "./components/ui/EnvelopeIntro";
 import { motion } from "motion/react";
+import LogIn from "./auth/logIn";
+import Dashboard from "./dashboard/Dashboard";
+import { supabase } from "./lib/supabaseClient";
+import confetti from "canvas-confetti";
 
 function Dress(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -95,7 +99,454 @@ function SectionHeader({ eyebrow, title, eyebrowColor, titleColor }: { eyebrow: 
   );
 }
 
+function RsvpForm() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState<unknown[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchMessage, setSearchMessage] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [selectedGuest, setSelectedGuest] = useState<any>(null);
+  
+  // RSVP Form fields
+  const [confirmado, setConfirmado] = useState<boolean | null>(true);
+  const [pasesConfirmados, setPasesConfirmados] = useState(0);
+  const [asistentes, setAsistentes] = useState<string[]>([]);
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const term = searchTerm.trim();
+    if (!term) return;
+    setIsSearching(true);
+    setSearchMessage("");
+    setSearchResults([]);
+    setSelectedGuest(null);
+
+    try {
+      const { data, error } = await supabase
+        .from("invitados")
+        .select("*")
+        .ilike("nombre_invitacion", `%${term}%`);
+
+      if (error) {
+        setSearchMessage("Ocurrió un error al buscar. Inténtalo de nuevo.");
+      } else if (!data || data.length === 0) {
+        setSearchMessage("No encontramos ninguna invitación con ese nombre. Intenta buscando con un apellido o nombre diferente.");
+      } else {
+        setSearchResults(data);
+      }
+    } catch (err) {
+      console.error(err);
+      setSearchMessage("Error de conexión. Revisa tu internet.");
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleSelectGuest = (guest: any) => {
+    setSelectedGuest(guest);
+    setConfirmado(guest.confirmado !== null ? guest.confirmado : true);
+    setPasesConfirmados(guest.pases_confirmados || guest.pases_totales);
+    
+    const initialAsistentes = [...(guest.nombres_asistentes || [])];
+    while (initialAsistentes.length < guest.pases_totales) {
+      initialAsistentes.push("");
+    }
+    setAsistentes(initialAsistentes);
+    setSearchResults([]);
+  };
+
+  const handleAttendeeNameChange = (index: number, value: string) => {
+    const nextAsistentes = [...asistentes];
+    nextAsistentes[index] = value;
+    setAsistentes(nextAsistentes);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedGuest) return;
+    setIsSubmitting(true);
+
+    const finalAsistentes = confirmado
+      ? asistentes.slice(0, pasesConfirmados).map(n => n.trim()).filter(Boolean)
+      : [];
+
+    const updatedData = {
+      confirmado: confirmado,
+      pases_confirmados: confirmado ? pasesConfirmados : 0,
+      nombres_asistentes: finalAsistentes
+    };
+
+    try {
+      const { error } = await supabase
+        .from("invitados")
+        .update(updatedData)
+        .eq("id", selectedGuest.id);
+
+      if (error) {
+        alert("Ocurrió un error al enviar tu confirmación: " + error.message);
+      } else {
+        setHasSubmitted(true);
+        if (confirmado) {
+          confetti({
+            particleCount: 150,
+            spread: 80,
+            origin: { y: 0.6 }
+          });
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error al conectar con el servidor.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const resetRsvp = () => {
+    setSearchTerm("");
+    setSearchResults([]);
+    setSelectedGuest(null);
+    setHasSubmitted(false);
+  };
+
+  useEffect(() => {
+    const checkHashToken = async () => {
+      const hash = window.location.hash;
+      if (hash.startsWith("#/rsvp/")) {
+        const token = hash.replace("#/rsvp/", "").trim();
+        if (token) {
+          setIsSearching(true);
+          setSearchMessage("");
+          try {
+            const { data, error } = await supabase
+              .from("invitados")
+              .select("*")
+              .eq("token", token)
+              .maybeSingle();
+
+            if (error) {
+              console.error("Error loading token guest:", error);
+            } else if (data) {
+              handleSelectGuest(data);
+            } else {
+              setSearchMessage("El enlace de invitación no es válido.");
+            }
+          } catch (err) {
+            console.error("Token search exception:", err);
+          } finally {
+            setIsSearching(false);
+          }
+        }
+      }
+    };
+
+    checkHashToken();
+    window.addEventListener("hashchange", checkHashToken);
+    return () => window.removeEventListener("hashchange", checkHashToken);
+  }, []);
+
+  return (
+    <section id="confirmacion-rsvp" className="py-20 px-6 max-w-2xl mx-auto">
+      <SectionHeader eyebrow="Confirmación" title="¿Nos acompañas?" />
+      
+      <div 
+        className="bg-card border border-border rounded-lg shadow-xl p-8 relative overflow-hidden"
+        style={{ boxShadow: "0 10px 40px rgba(42, 31, 18, 0.06)" }}
+      >
+        <div
+          className="absolute top-0 inset-x-0 h-1.5"
+          style={{
+            background: "linear-gradient(90deg, var(--accent), var(--primary), var(--accent))",
+          }}
+        />
+
+        {hasSubmitted ? (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center py-6 space-y-4"
+          >
+            <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto">
+              <Check className="w-8 h-8 text-primary" />
+            </div>
+            <h3 className="text-2xl text-foreground font-medium" style={{ fontFamily: "var(--font-display)" }}>
+              {confirmado ? "¡Gracias por confirmar!" : "Confirmación enviada"}
+            </h3>
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-md mx-auto">
+              {confirmado 
+                ? "Estamos muy emocionados de compartir este día tan especial contigo. ¡Te esperamos!" 
+                : "Lamentamos mucho que no puedas asistir. Agradecemos tu respuesta de corazón y te extrañaremos ese día."
+              }
+            </p>
+            <button
+              onClick={resetRsvp}
+              className="mt-6 px-6 py-2.5 bg-muted hover:bg-muted-foreground/15 text-muted-foreground hover:text-foreground text-xs font-semibold rounded tracking-wider transition-all cursor-pointer"
+            >
+              Modificar o buscar otra invitación
+            </button>
+          </motion.div>
+        ) : !selectedGuest ? (
+          <div className="space-y-6">
+            <p className="text-sm text-muted-foreground text-center leading-relaxed">
+              Ingresa el nombre que aparece en tu invitación (ej. &quot;Familia Ruiz&quot; o &quot;Carlos Bermúdez&quot;) para buscar y registrar tu confirmación de asistencia.
+            </p>
+            
+            <form onSubmit={handleSearch} className="flex gap-2">
+              <input
+                type="text"
+                required
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Nombre de la invitación..."
+                className="flex-grow px-4 py-3 border border-border rounded-sm text-sm bg-input-background text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all"
+              />
+              <button
+                type="submit"
+                disabled={isSearching}
+                className="px-6 bg-primary text-primary-foreground font-semibold text-xs tracking-wider uppercase rounded-sm hover:opacity-90 active:scale-95 disabled:opacity-50 transition-all cursor-pointer shrink-0"
+                style={{ backgroundColor: "var(--primary)" }}
+              >
+                {isSearching ? "Buscando..." : "Buscar"}
+              </button>
+            </form>
+
+            {searchMessage && (
+              <p className="text-xs text-amber-700 text-center font-medium bg-amber-500/5 p-3 rounded border border-amber-500/10">
+                {searchMessage}
+              </p>
+            )}
+
+            {searchResults.length > 0 && (
+              <div className="space-y-3 pt-2">
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Coincidencias encontradas:</p>
+                <div className="divide-y divide-border border border-border rounded overflow-hidden">
+                  {searchResults.map((guest) => (
+                    <button
+                      key={guest.id}
+                      onClick={() => handleSelectGuest(guest)}
+                      className="w-full text-left p-4 hover:bg-muted/30 active:bg-muted/50 transition-colors flex justify-between items-center bg-card cursor-pointer"
+                    >
+                      <div>
+                        <span className="font-semibold text-foreground text-sm">{guest.nombre_invitacion}</span>
+                        <span className="block text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">
+                          {guest.pases_totales} {guest.pases_totales === 1 ? "pase asignado" : "pases asignados"}
+                        </span>
+                      </div>
+                      <span className="text-xs text-primary font-bold tracking-widest uppercase hover:underline">
+                        Seleccionar →
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="border-b border-border pb-4 flex justify-between items-start">
+              <div>
+                <p className="text-[10px] tracking-widest uppercase text-muted-foreground font-bold">Invitación seleccionada</p>
+                <h4 className="text-lg font-semibold text-foreground mt-0.5">{selectedGuest.nombre_invitacion}</h4>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedGuest(null)}
+                className="text-xs text-primary hover:underline font-semibold cursor-pointer"
+              >
+                Cambiar
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <label className="block text-[10px] tracking-wider uppercase font-bold text-muted-foreground">
+                ¿Confirmas tu asistencia?
+              </label>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setConfirmado(true)}
+                  className={`flex-1 py-3.5 rounded border text-xs font-semibold tracking-wider uppercase transition-all cursor-pointer
+                    ${confirmado === true 
+                      ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/30 ring-1 ring-emerald-500/30" 
+                      : "bg-transparent text-muted-foreground border-border hover:bg-muted"
+                    }`}
+                >
+                  Sí, asistiré
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmado(false)}
+                  className={`flex-1 py-3.5 rounded border text-xs font-semibold tracking-wider uppercase transition-all cursor-pointer
+                    ${confirmado === false 
+                      ? "bg-rose-500/10 text-rose-700 border-rose-500/30 ring-1 ring-rose-500/30" 
+                      : "bg-transparent text-muted-foreground border-border hover:bg-muted"
+                    }`}
+                >
+                  No podré asistir
+                </button>
+              </div>
+            </div>
+
+            {confirmado && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                className="space-y-6 overflow-hidden"
+              >
+                <div className="space-y-2">
+                  <label htmlFor="pases-confirm" className="block text-[10px] tracking-wider uppercase font-bold text-muted-foreground">
+                    ¿Cuántos pases utilizarás? (Máximo {selectedGuest.pases_totales})
+                  </label>
+                  <select
+                    id="pases-confirm"
+                    value={pasesConfirmados}
+                    onChange={(e) => setPasesConfirmados(Number(e.target.value))}
+                    className="w-full px-3 py-2 border border-border rounded bg-input-background text-sm text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+                  >
+                    {Array.from({ length: selectedGuest.pases_totales }, (_, i) => i + 1).map((val) => (
+                      <option key={val} value={val}>
+                        {val} {val === 1 ? "pase" : "pases"}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-3">
+                  <label className="block text-[10px] tracking-wider uppercase font-bold text-muted-foreground">
+                    Nombres de las personas que asistirán:
+                  </label>
+                  <div className="space-y-2.5">
+                    {Array.from({ length: pasesConfirmados }).map((_, idx) => (
+                      <input
+                        key={idx}
+                        type="text"
+                        required
+                        value={asistentes[idx] || ""}
+                        onChange={(e) => handleAttendeeNameChange(idx, e.target.value)}
+                        placeholder={`Nombre completo del asistente ${idx + 1}`}
+                        className="w-full px-3 py-2.5 border border-border rounded bg-input-background text-xs text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all"
+                      />
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-3.5 bg-primary text-primary-foreground font-semibold text-xs tracking-wider uppercase rounded hover:opacity-90 active:scale-[0.98] disabled:opacity-50 transition-all cursor-pointer"
+              style={{ backgroundColor: "var(--primary)" }}
+            >
+              {isSubmitting ? "Enviando..." : "Confirmar Respuesta"}
+            </button>
+          </form>
+        )}
+      </div>
+    </section>
+  );
+}
+
+class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean; error: Error | null }> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  componentDidCatch(error: Error, errorInfo: any) {
+    console.error("ErrorBoundary caught an error", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-8 bg-red-50 text-red-900 border border-red-200 rounded m-4 font-mono text-xs max-w-xl mx-auto my-12 shadow-lg">
+          <h2 className="text-lg font-bold mb-2">Error de Ejecución (Runtime Error):</h2>
+          <p className="mb-4">Por favor copia y reporta este error para solucionarlo:</p>
+          <pre className="bg-red-100 p-4 rounded overflow-auto max-w-full text-left font-mono font-semibold whitespace-pre-wrap">
+            {this.state.error?.stack || this.state.error?.message}
+          </pre>
+          <button 
+            onClick={() => {
+              window.location.hash = "#/";
+              window.location.reload();
+            }} 
+            className="mt-6 px-4 py-2 bg-red-600 text-white rounded font-sans font-semibold hover:bg-red-700 transition-colors"
+          >
+            Volver a la Invitación
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 export default function App() {
+  const [currentRoute, setCurrentRoute] = useState(() => {
+    const hash = window.location.hash;
+    if (hash === "#/login" || hash === "#/couple") return "login";
+    if (hash === "#/dashboard") return "dashboard";
+    return "invitation";
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [session, setSession] = useState<any>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    supabase.auth.getSession()
+      .then((res) => {
+        const session = res?.data?.session || null;
+        setSession(session);
+        setAuthLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error getting session:", err);
+        setSession(null);
+        setAuthLoading(false);
+      });
+
+    const res = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setAuthLoading(false);
+    });
+
+    const subscription = res?.data?.subscription || res;
+
+    return () => {
+      if (subscription && typeof subscription.unsubscribe === "function") {
+        subscription.unsubscribe();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash === "#/login" || hash === "#/couple") {
+        setCurrentRoute("login");
+      } else if (hash === "#/dashboard") {
+        setCurrentRoute("dashboard");
+      } else {
+        setCurrentRoute("invitation");
+      }
+    };
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
   const { days, hours, minutes, seconds } = useCountdown(WEDDING_DATE);
   const [copied, setCopied] = useState(false);
 
@@ -106,13 +557,51 @@ export default function App() {
     window.scrollTo(0, 0);
   }, []);
 
+  if (currentRoute === "login") {
+    if (session) {
+      window.location.hash = "#/dashboard";
+    }
+    return (
+      <ErrorBoundary>
+        <LogIn />
+      </ErrorBoundary>
+    );
+  }
+
+  if (currentRoute === "dashboard") {
+    if (authLoading) {
+      return (
+        <div className="min-h-screen bg-background flex flex-col items-center justify-center">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+          <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-semibold">Cargando Panel...</p>
+        </div>
+      );
+    }
+
+    if (!session) {
+      window.location.hash = "#/couple";
+      return (
+        <ErrorBoundary>
+          <LogIn />
+        </ErrorBoundary>
+      );
+    }
+
+    return (
+      <ErrorBoundary>
+        <Dashboard />
+      </ErrorBoundary>
+    );
+  }
+
 const handleCopyClabe = () => {
     const clabe = "014690920016940652";
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(clabe).then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
-      }).catch(err => {
+      }).catch((err) => {
+        console.error(err);
         fallbackCopyText(clabe);
       });
     } else {
@@ -865,6 +1354,10 @@ const handleCopyClabe = () => {
           </div>
         </div>
       </section>
+
+      <Divider />
+
+      <RsvpForm />
 
       <Divider />
 

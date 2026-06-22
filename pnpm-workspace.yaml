@@ -1,7 +1,6 @@
-# The new home for your version overrides and build permissions
 overrides:
   vite: 6.3.5
 
-allowBuilds:
-  "@tailwindcss/oxide": true
-  "esbuild": true
+onlyBuiltDependencies:
+  - "@tailwindcss/oxide"
+  - "esbuild"

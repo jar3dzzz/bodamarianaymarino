@@ -1005,7 +1005,7 @@ const handleCopyClabe = () => {
                   <div className="border p-6 md:p-8 relative" style={{ borderColor: "rgba(181, 145, 84, 0.25)" }}>
                     <div className="absolute top-0 inset-x-4 h-0.5" style={{ backgroundColor: "var(--accent)", opacity: 0.7 }} />
                     <p className="text-[10px] tracking-[0.4em] uppercase mb-6 text-center font-semibold" style={{ color: "var(--primary)" }}>
-                      Con la bendición de sus padres
+                      Con la bendición de sus padres:
                     </p>
                     <div className="grid grid-cols-2 gap-6 text-center relative">
                       <div className="border-r pr-4" style={{ borderColor: "rgba(181, 145, 84, 0.2)" }}>

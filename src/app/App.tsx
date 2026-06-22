@@ -67,6 +67,24 @@ function Divider() {
   );
 }
 
+function CherryPetal({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" className={className} style={style}>
+      <path d="M10,3 C10.5,1.5 12,1 13.5,2 C15,3 16,5.5 14,9 C12,12.5 10,16 10,16 C10,16 8,12.5 6,9 C4,5.5 5,3 6.5,2 C8,1 9.5,1.5 10,3 Z" />
+    </svg>
+  );
+}
+
+const CHERRY_PETALS = Array.from({ length: 18 }, (_, i) => ({
+  id: i,
+  left: `${Math.random() * 100}%`,
+  size: Math.random() * 12 + 16, // 16px to 28px
+  duration: Math.random() * 12 + 10, // 10s to 22s
+  delay: Math.random() * -22, // Pre-distributed across screen height
+  sway: Math.random() * 40 + 20, // 20px to 60px sway
+  rotate: Math.random() * 360,
+}));
+
 const WEDDING_DATE = new Date("2026-11-21T18:00:00");
 
 function getTimeLeft(target: Date) {
@@ -640,6 +658,34 @@ const handleCopyClabe = () => {
         >
           <BotanicalBranch className="w-full h-full" />
         </motion.div>
+
+        {/* Falling Cherry Blossom Petals */}
+        {CHERRY_PETALS.map((petal) => (
+          <motion.div
+            key={petal.id}
+            className="absolute pointer-events-none"
+            style={{
+              left: petal.left,
+              width: petal.size,
+              height: petal.size,
+              top: "-5%",
+              color: "rgba(251, 196, 196, 0.32)", // Slightly more noticeable soft rose-pink
+            }}
+            animate={{
+              y: ["0vh", "110vh"],
+              x: [0, petal.sway, -petal.sway, 0],
+              rotate: [petal.rotate, petal.rotate + 360],
+            }}
+            transition={{
+              duration: petal.duration,
+              repeat: Infinity,
+              ease: "linear",
+              delay: petal.delay,
+            }}
+          >
+            <CherryPetal className="w-full h-full" />
+          </motion.div>
+        ))}
       </div>
 
       <div className="w-full min-h-screen text-foreground relative z-10 overflow-x-hidden bg-transparent">
@@ -1053,8 +1099,8 @@ const handleCopyClabe = () => {
         <div className="absolute inset-x-0 top-0 h-64 pointer-events-none" style={{ background: "linear-gradient(to bottom, var(--background) 15%, rgba(250,247,242,0.8) 40%, transparent)" }} />
         <div className="absolute inset-x-0 bottom-0 h-48 pointer-events-none" style={{ background: "linear-gradient(to top, var(--background) 15%, transparent)" }} />
         
-        <div className="relative z-10 max-w-xl mx-auto pt-8">
-          <SectionHeader eyebrow="El lugar" title="Ubicación" eyebrowColor="var(--accent)" titleColor="var(--secondary)" />
+        <div className="relative z-10 max-w-2xl mx-auto pt-8">
+          <SectionHeader eyebrow="El lugar" title="Ubicación" eyebrowColor="var(--accent)" titleColor="var(--foreground)" />
           <motion.div
             className="p-3 bg-white mx-auto shadow-2xl"
             initial={{ opacity: 0, y: 15 }}
@@ -1062,31 +1108,43 @@ const handleCopyClabe = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <div className="border p-10 text-center flex flex-col items-center" style={{ borderColor: "var(--foreground)" }}>
-              <p className="text-4xl mb-6" style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}>Casona 333</p>
-              <div className="w-12 h-px mb-6" style={{ backgroundColor: "var(--accent)" }} />
-              <p className="text-sm mb-2 text-foreground" style={{ fontFamily: "var(--font-body)" }}>Sábado 21 de Noviembre, 2026</p>
-              <p className="text-sm mb-6 text-foreground" style={{ fontFamily: "var(--font-body)" }}>6:00 PM</p>
-              
-              <p className="text-xs flex items-center justify-center gap-2 mb-10" style={{ color: "var(--secondary)" }}>
-                <Car className="w-4 h-4 shrink-0" />
-                <span>Estacionamiento incluido</span>
-              </p>
+            <div className="border flex flex-col md:flex-row items-stretch" style={{ borderColor: "var(--foreground)" }}>
+              {/* Image Column */}
+              <div className="w-full md:w-1/2 h-[220px] md:h-auto min-h-[280px] relative overflow-hidden">
+                <img 
+                  src="/lo1.jpg" 
+                  alt="Casona 333" 
+                  className="w-full h-full object-cover absolute inset-0"
+                />
+              </div>
 
-              <a
-                href="https://maps.app.goo.gl/VYi3itBrbckY2MCd9"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-3 px-8 py-4 text-[11px] tracking-[0.25em] uppercase font-semibold transition-all duration-300 hover:opacity-85 border"
-                style={{
-                  backgroundColor: "var(--foreground)",
-                  color: "var(--primary-foreground)",
-                  borderColor: "var(--foreground)"
-                }}
-              >
-                <MapPin className="w-4 h-4" />
-                Abrir en Maps
-              </a>
+              {/* Info Column */}
+              <div className="w-full md:w-1/2 p-8 md:p-10 text-center flex flex-col items-center justify-center bg-card">
+                <p className="text-4xl mb-6" style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}>Casona 333</p>
+                <div className="w-12 h-px mb-6" style={{ backgroundColor: "var(--accent)" }} />
+                <p className="text-sm mb-2 text-foreground font-semibold" style={{ fontFamily: "var(--font-body)" }}>Sábado 21 de Noviembre, 2026</p>
+                <p className="text-sm mb-6 text-foreground/80" style={{ fontFamily: "var(--font-body)" }}>6:00 PM</p>
+                
+                <p className="text-xs flex items-center justify-center gap-2 mb-8" style={{ color: "var(--secondary)" }}>
+                  <Car className="w-4 h-4 shrink-0" />
+                  <span>Estacionamiento incluido</span>
+                </p>
+
+                <a
+                  href="https://maps.app.goo.gl/VYi3itBrbckY2MCd9"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-3 w-full py-3.5 text-[10px] tracking-[0.2em] uppercase font-semibold transition-all duration-300 hover:opacity-85 border cursor-pointer"
+                  style={{
+                    backgroundColor: "var(--foreground)",
+                    color: "var(--primary-foreground)",
+                    borderColor: "var(--foreground)"
+                  }}
+                >
+                  <MapPin className="w-4 h-4" />
+                  Abrir en Maps
+                </a>
+              </div>
             </div>
           </motion.div>
         </div>

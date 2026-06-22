@@ -129,3 +129,5 @@ dist-ssr/
 .env.production.local
 
 .agents/
+
+# pnpm files

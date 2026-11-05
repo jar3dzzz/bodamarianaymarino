@@ -1030,20 +1030,20 @@ const handleCopyClabe = () => {
                     icon: <Heart className="w-5 h-5" style={{ color: "var(--primary)" }} /> 
                   },
                   { 
-                    time: "6:30 PM", 
+                    time: "6:00 PM", 
                     event: "Cóctel de Bienvenida", 
                     description: "Recepción de invitados y brindis de bienvenida en el jardín.",
                     icon: <Martini className="w-5 h-5" style={{ color: "var(--primary)" }} /> 
                   },
                   { 
-                    time: "8:00 PM", 
+                    time: "7:00 PM", 
                     event: "Cena", 
                     description: "Banquete principal, brindis y momentos especiales.",
                     icon: <Utensils className="w-5 h-5" style={{ color: "var(--primary)" }} /> 
                   },
                   { 
-                    time: "9:00 PM", 
-                    event: "Fiesta", 
+                    time: "8:30 PM", 
+                    event: "Apertura de Pista", 
                     description: "Apertura de pista de baile y celebración con DJ.",
                     icon: <Music className="w-5 h-5" style={{ color: "var(--primary)" }} /> 
                   }

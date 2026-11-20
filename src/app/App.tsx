@@ -85,7 +85,7 @@ const CHERRY_PETALS = Array.from({ length: 18 }, (_, i) => ({
   rotate: Math.random() * 360,
 }));
 
-const WEDDING_DATE = new Date("2026-11-21T18:00:00");
+const WEDDING_DATE = new Date("2026-11-21T17:00:00");
 
 function getTimeLeft(target: Date) {
   const diff = target.getTime() - Date.now();
@@ -1149,7 +1149,7 @@ const handleCopyClabe = () => {
                 <p className="text-4xl mb-6" style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}>Casona 333</p>
                 <div className="w-12 h-px mb-6" style={{ backgroundColor: "var(--accent)" }} />
                 <p className="text-sm mb-2 text-foreground font-semibold" style={{ fontFamily: "var(--font-body)" }}>Sábado 21 de Noviembre, 2026</p>
-                <p className="text-sm mb-6 text-foreground/80" style={{ fontFamily: "var(--font-body)" }}>6:00 PM</p>
+                <p className="text-sm mb-6 text-foreground/80" style={{ fontFamily: "var(--font-body)" }}>5:00 PM</p>
                 
                 <p className="text-xs flex items-center justify-center gap-2 mb-8" style={{ color: "var(--secondary)" }}>
                   <Car className="w-4 h-4 shrink-0" />
